@@ -42,6 +42,21 @@ The default keys are deliberately chosen to **not** collide with any built-in VS
 
 The `-` lines remove the built-in *Move Line* binding so only Dynalist Mover responds. To rebind to anything else, search for "Dynalist Mover" in the **Keyboard Shortcuts** UI.
 
+### Prefer `Ctrl+↑/↓`? (Dynalist-style)
+
+Dynalist itself uses `Ctrl+↑/↓`. In VS Code that key only collides with one editor command — `scrollLineUp/Down` (scroll the editor by a single line) — so claiming it is just as easy. Add this to your personal keybindings JSON:
+
+```json
+[
+  { "key": "ctrl+up",   "command": "dynalistMover.moveLinesUp",   "when": "editorTextFocus && !editorReadonly" },
+  { "key": "ctrl+up",   "command": "-scrollLineUp",               "when": "editorTextFocus" },
+  { "key": "ctrl+down", "command": "dynalistMover.moveLinesDown", "when": "editorTextFocus && !editorReadonly" },
+  { "key": "ctrl+down", "command": "-scrollLineDown",             "when": "editorTextFocus" }
+]
+```
+
+The many other `Ctrl+↑/↓` entries you may see in the Keyboard Shortcuts list (lists, terminal, suggestion widgets, etc.) have different `when` contexts and won't interfere with editing. The only thing you give up is one-line scrolling in the editor, which `PageUp/PageDown`, the mouse wheel, and `Ctrl+Home/End` cover anyway.
+
 ## Settings
 
 | Setting | Default | Description |
