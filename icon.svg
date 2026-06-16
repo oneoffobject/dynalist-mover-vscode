@@ -1,0 +1,32 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F6FEB"/>
+      <stop offset="1" stop-color="#0A4DBE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded background -->
+  <rect x="0" y="0" width="128" height="128" rx="26" fill="url(#bg)"/>
+
+  <!-- outline rows: bullet + bar, one row indented as a child -->
+  <g fill="#FFFFFF">
+    <!-- row 1 (parent) -->
+    <circle cx="30" cy="34" r="5"/>
+    <rect x="42" y="29" width="58" height="10" rx="5"/>
+
+    <!-- moving block: parent row 2 + its indented child, highlighted -->
+    <rect x="20" y="52" width="92" height="44" rx="10" fill="#FFFFFF" opacity="0.22"/>
+    <circle cx="30" cy="64" r="5"/>
+    <rect x="42" y="59" width="58" height="10" rx="5"/>
+    <!-- indented child -->
+    <circle cx="48" cy="84" r="4"/>
+    <rect x="58" y="80" width="42" height="8" rx="4"/>
+  </g>
+
+  <!-- up / down arrows indicating the block moves -->
+  <g stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <polyline points="106,52 113,45 120,52"/>
+    <polyline points="106,96 113,103 120,96"/>
+  </g>
+</svg>

@@ -8,3 +8,4 @@ tsconfig.json
 node_modules/**
 !out/**
 EXPERIMENT_NOTES.md
+icon.svg
