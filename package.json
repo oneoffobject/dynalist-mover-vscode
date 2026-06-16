@@ -2,7 +2,7 @@
   "name": "dynalist-mover-vscode",
   "displayName": "Dynalist Mover",
   "description": "Move the current line (or selection) together with its indented child items up or down, bringing a Dynalist-like outliner editing experience to VS Code.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "OneOffObject",
   "license": "MIT",
   "icon": "icon.png",
