@@ -1,0 +1,78 @@
+{
+  "name": "dynalist-mover-vscode",
+  "displayName": "Dynalist Mover",
+  "description": "Move the current line (or selection) together with its indented child items up or down, bringing a Dynalist-like outliner editing experience to VS Code.",
+  "version": "1.0.0",
+  "publisher": "OneOffObject",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "keywords": [
+    "dynalist",
+    "outliner",
+    "move line",
+    "move list",
+    "markdown",
+    "indent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OneOffObject/dynalist-mover-vscode"
+  },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "dynalistMover.moveLinesUp",
+        "title": "Dynalist Mover: Move selected lines up"
+      },
+      {
+        "command": "dynalistMover.moveLinesDown",
+        "title": "Dynalist Mover: Move selected lines down"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "dynalistMover.moveLinesUp",
+        "key": "alt+up",
+        "when": "editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "dynalistMover.moveLinesDown",
+        "key": "alt+down",
+        "when": "editorTextFocus && !editorReadonly"
+      }
+    ],
+    "configuration": {
+      "title": "Dynalist Mover",
+      "properties": {
+        "dynalistMover.moveChildrenWithParent": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "When enabled, moving a parent item also moves its indented child items as a single block (Dynalist-like outliner behavior)."
+        },
+        "dynalistMover.highlightSelection": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Highlight the full lines of the current multi-line selection with a light blue background, similar to Dynalist."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.4.0"
+  }
+}
