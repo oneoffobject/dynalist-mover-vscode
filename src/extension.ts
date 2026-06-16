@@ -54,6 +54,57 @@ function getIndentLength(str: string, tabSize: number): number {
     return length;
 }
 
+/**
+ * Expands a raw line selection to a complete outline block: the start moves up
+ * to the head of the shallowest subtree that contains the selection, and the
+ * end moves down to include trailing indented children. This mirrors Dynalist,
+ * where selecting part of a subtree selects the whole well-formed block, so
+ * level-crossing selections move as a single unit instead of tearing apart.
+ */
+function expandToBlock(
+    doc: vscode.TextDocument,
+    tabSize: number,
+    startLine: number,
+    endLine: number
+): { startLine: number; endLine: number } {
+    const indentOf = (i: number) => getIndentLength(doc.lineAt(i).text, tabSize);
+    const isBlank = (i: number) => doc.lineAt(i).text.trim().length === 0;
+
+    // Shallowest indentation among the non-blank selected lines.
+    let minIndent = Infinity;
+    for (let i = startLine; i <= endLine; i++) {
+        if (isBlank(i)) {
+            continue;
+        }
+        minIndent = Math.min(minIndent, indentOf(i));
+    }
+    if (!Number.isFinite(minIndent)) {
+        minIndent = 0;
+    }
+
+    // Move the start up to the head of the enclosing block at that level.
+    while (startLine > 0 && indentOf(startLine) > minIndent) {
+        startLine--;
+    }
+
+    // Move the end down to include the whole subtree of the block's root, i.e.
+    // every following line indented deeper than the root. This pulls in sibling
+    // children (e.g. selecting "d, e" also grabs "f") so subtrees stay intact.
+    const rootIndent = indentOf(startLine);
+    for (let i = endLine + 1; i < doc.lineCount; i++) {
+        if (isBlank(i)) {
+            break;
+        }
+        if (indentOf(i) > rootIndent) {
+            endLine = i;
+        } else {
+            break;
+        }
+    }
+
+    return { startLine, endLine };
+}
+
 async function moveLines(editor: vscode.TextEditor, direction: number): Promise<void> {
     const { moveChildrenWithParent } = getConfig();
     const doc = editor.document;
@@ -78,20 +129,10 @@ async function moveLines(editor: vscode.TextEditor, direction: number): Promise<
         endLine--;
     }
 
-    // 1. Expand the block downward to include indented children of the last line.
+    // Snap the raw selection to a complete outline block (parent + children),
+    // so partial, level-crossing selections move as a single well-formed unit.
     if (moveChildrenWithParent) {
-        const lastLineIndent = getIndentLength(lineText(endLine), tabSize);
-        for (let i = endLine + 1; i < doc.lineCount; i++) {
-            const str = lineText(i);
-            if (str.trim().length === 0) {
-                break;
-            }
-            if (getIndentLength(str, tabSize) > lastLineIndent) {
-                endLine = i;
-            } else {
-                break;
-            }
-        }
+        ({ startLine, endLine } = expandToBlock(doc, tabSize, startLine, endLine));
     }
 
     const baseIndent = getIndentLength(lineText(startLine), tabSize);
@@ -132,7 +173,10 @@ async function moveLines(editor: vscode.TextEditor, direction: number): Promise<
         const nextLine = endLine + 1;
         let targetLine = nextLine;
 
-        // Skip over the children of the next sibling.
+        // Skip over the children of the next sibling so the block lands after
+        // the whole sibling subtree. If the next line is shallower than the
+        // block (no next sibling), we simply swap with that single line, which
+        // moves the block past its parent boundary while keeping indentation.
         if (moveChildrenWithParent) {
             const nextIndent = getIndentLength(lineText(nextLine), tabSize);
             if (nextIndent >= baseIndent) {
@@ -158,6 +202,10 @@ async function moveLines(editor: vscode.TextEditor, direction: number): Promise<
         range = new vscode.Range(startLine, 0, targetLine, lineText(targetLine).length);
     }
 
+    // The block's last line keeps its text after the move; capture its length
+    // now (pre-edit) to place the new selection's end at the right column.
+    const lastLineLen = lineText(endLine).length;
+
     const ok = await editor.edit(
         editBuilder => editBuilder.replace(range, replacement),
         { undoStopBefore: true, undoStopAfter: true }
@@ -167,11 +215,12 @@ async function moveLines(editor: vscode.TextEditor, direction: number): Promise<
         return;
     }
 
-    // Preserve the original selection, shifted by the number of lines moved.
-    const newAnchor = new vscode.Position(selection.anchor.line + offset, selection.anchor.character);
-    const newActive = new vscode.Position(selection.active.line + offset, selection.active.character);
-    editor.selection = new vscode.Selection(newAnchor, newActive);
-    editor.revealRange(new vscode.Range(newAnchor, newActive));
+    // Select the whole moved block, so the highlight matches and repeated
+    // presses (and up/down round-trips) stay consistent.
+    const anchor = new vscode.Position(startLine + offset, 0);
+    const active = new vscode.Position(endLine + offset, lastLineLen);
+    editor.selection = new vscode.Selection(anchor, active);
+    editor.revealRange(new vscode.Range(anchor, active));
 }
 
 function collectLines(lineText: (i: number) => string, from: number, to: number): string[] {
@@ -222,18 +271,26 @@ class SelectionHighlighter implements vscode.Disposable {
             return;
         }
 
+        const childMode = getConfig().moveChildrenWithParent;
+        const tabSize = getTabSize(editor);
         const ranges: vscode.Range[] = [];
         for (const sel of editor.selections) {
             if (sel.isEmpty || sel.start.line === sel.end.line) {
                 continue;
             }
+            let startLine = sel.start.line;
             let endLine = sel.end.line;
             if (sel.end.character === 0) {
                 endLine--;
             }
-            if (endLine >= sel.start.line) {
-                ranges.push(new vscode.Range(sel.start.line, 0, endLine, 0));
+            if (endLine < startLine) {
+                continue;
             }
+            // Preview the full block that would actually move.
+            if (childMode) {
+                ({ startLine, endLine } = expandToBlock(editor.document, tabSize, startLine, endLine));
+            }
+            ranges.push(new vscode.Range(startLine, 0, endLine, editor.document.lineAt(endLine).text.length));
         }
         editor.setDecorations(this.decoration, ranges);
     }
