@@ -40,12 +40,14 @@
     "keybindings": [
       {
         "command": "dynalistMover.moveLinesUp",
-        "key": "alt+up",
+        "key": "ctrl+shift+alt+up",
+        "mac": "cmd+shift+alt+up",
         "when": "editorTextFocus && !editorReadonly"
       },
       {
         "command": "dynalistMover.moveLinesDown",
-        "key": "alt+down",
+        "key": "ctrl+shift+alt+down",
+        "mac": "cmd+shift+alt+down",
         "when": "editorTextFocus && !editorReadonly"
       }
     ],

@@ -21,16 +21,26 @@ When the current line has no children, the behavior is identical to a normal lin
 ## Usage
 
 1. Place the cursor on a line, or select one or more lines.
-2. Press **`Alt+↑`** / **`Alt+↓`** (these replace the default *Move Line* shortcuts), or run the commands from the Command Palette:
+2. Press **`Ctrl+Shift+Alt+↑`** / **`Ctrl+Shift+Alt+↓`** (on macOS **`Cmd+Shift+Alt+↑/↓`**), or run the commands from the Command Palette:
    - `Dynalist Mover: Move selected lines up`
    - `Dynalist Mover: Move selected lines down`
 
-### Changing the keybindings
+The default keys are deliberately chosen to **not** collide with any built-in VS Code shortcut.
 
-If you'd rather keep VS Code's native *Move Line* on `Alt+↑/↓`, rebind these commands in **Keyboard Shortcuts** (search for "Dynalist Mover"):
+### Prefer `Alt+↑/↓`?
 
-- `dynalistMover.moveLinesUp`
-- `dynalistMover.moveLinesDown`
+`Alt+↑/↓` is the most natural fit, but VS Code already binds it to its own *Move Line* command. An extension can't override a built-in default, so you have to claim the key in your **personal** keybindings (which always win). Open **`Preferences: Open Keyboard Shortcuts (JSON)`** from the Command Palette and add:
+
+```json
+[
+  { "key": "alt+up",   "command": "dynalistMover.moveLinesUp",          "when": "editorTextFocus && !editorReadonly" },
+  { "key": "alt+up",   "command": "-editor.action.moveLinesUpAction",   "when": "editorTextFocus && !editorReadonly" },
+  { "key": "alt+down", "command": "dynalistMover.moveLinesDown",        "when": "editorTextFocus && !editorReadonly" },
+  { "key": "alt+down", "command": "-editor.action.moveLinesDownAction", "when": "editorTextFocus && !editorReadonly" }
+]
+```
+
+The `-` lines remove the built-in *Move Line* binding so only Dynalist Mover responds. To rebind to anything else, search for "Dynalist Mover" in the **Keyboard Shortcuts** UI.
 
 ## Settings
 
