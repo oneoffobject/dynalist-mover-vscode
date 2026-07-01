@@ -6,6 +6,16 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 5
+    ignore:
+      # @types/vscode must track the minimum supported VS Code version
+      # (engines.vscode), not the latest release. @types/node must track the
+      # VS Code runtime's Node version, not the latest. Ignore major bumps so
+      # Dependabot stops proposing versions that let us use APIs unavailable at
+      # runtime.
+      - dependency-name: "@types/vscode"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   # Keep GitHub Actions versions current (avoids runtime deprecations).
   - package-ecosystem: "github-actions"
