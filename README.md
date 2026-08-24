@@ -1,12 +1,14 @@
-# Dynalist Mover for VS Code
+# Dynalist-Style Moves for VS Code
 
 Move the current line — or a multi-line selection — **together with its indented child items** up or down, bringing a Dynalist-like outliner editing experience to Visual Studio Code.
 
-This is a VS Code port of the [Dynalist Mover](https://github.com/OneOffObject/dynalist-mover) Obsidian plugin.
+> **Dynalist Mover is now Dynalist-Style Moves.** Only the name has changed; existing settings, keyboard shortcuts, and functionality remain unchanged.
+
+This is a VS Code port of the [Dynalist-Style Moves](https://github.com/OneOffObject/dynalist-mover) Obsidian plugin.
 
 ## Why not just `Alt+↑`/`Alt+↓`?
 
-VS Code's built-in *Move Line Up/Down* moves only the selected lines — it leaves indented children behind and drops the line into the middle of the next sibling block. Dynalist Mover treats a parent and all of its indented descendants as a single unit and jumps cleanly over neighboring blocks, just like an outliner.
+VS Code's built-in *Move Line Up/Down* moves only the selected lines — it leaves indented children behind and drops the line into the middle of the next sibling block. Dynalist-Style Moves treats a parent and all of its indented descendants as a single unit and jumps cleanly over neighboring blocks, just like an outliner.
 
 When the current line has no children, the behavior is identical to a normal line move, so it's a safe drop-in superset.
 
@@ -22,8 +24,8 @@ When the current line has no children, the behavior is identical to a normal lin
 
 1. Place the cursor on a line, or select one or more lines.
 2. Press **`Ctrl+Shift+Alt+↑`** / **`Ctrl+Shift+Alt+↓`** (on macOS **`Cmd+Shift+Alt+↑/↓`**), or run the commands from the Command Palette:
-   - `Dynalist Mover: Move selected lines up`
-   - `Dynalist Mover: Move selected lines down`
+   - `Dynalist-Style Moves: Move selected lines up`
+   - `Dynalist-Style Moves: Move selected lines down`
 
 The default keys are deliberately chosen to **not** collide with any built-in VS Code shortcut.
 
@@ -40,7 +42,7 @@ The default keys are deliberately chosen to **not** collide with any built-in VS
 ]
 ```
 
-The `-` lines remove the built-in *Move Line* binding so only Dynalist Mover responds. To rebind to anything else, search for "Dynalist Mover" in the **Keyboard Shortcuts** UI.
+The `-` lines remove the built-in *Move Line* binding so only Dynalist-Style Moves responds. To rebind to anything else, search for "Dynalist-Style Moves" in the **Keyboard Shortcuts** UI.
 
 ### Prefer `Ctrl+↑/↓`? (Dynalist-style)
 

@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to the "Dynalist Mover" extension are documented in this file.
+All notable changes to the "Dynalist-Style Moves" extension are documented in this file.
+
+## [1.1.1]
+
+- Renamed the extension from **Dynalist Mover** to **Dynalist-Style Moves** to
+  clarify that it provides Dynalist-style movement rather than data migration.
+- Existing settings, keyboard shortcuts, command IDs, and functionality remain
+  unchanged.
 
 ## [1.1.0]
 

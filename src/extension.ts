@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 
 /**
- * Dynalist Mover for VS Code
+ * Dynalist-Style Moves for VS Code
  *
- * Ported from the Obsidian "Dynalist Mover" plugin. Moves the current selection
+ * Ported from the Obsidian "Dynalist-Style Moves" plugin. Moves the current selection
  * (or cursor line) up/down, optionally carrying along any indented child lines so
  * a parent item and its descendants move as a single block — mirroring Dynalist's
  * outliner behavior. Works on any text, not just Markdown lists.
@@ -113,7 +113,7 @@ async function moveLines(editor: vscode.TextEditor, direction: number): Promise<
     const lineText = (i: number) => doc.lineAt(i).text;
 
     if (editor.selections.length > 1) {
-        vscode.window.showInformationMessage('Dynalist Mover supports one selection at a time.');
+        vscode.window.showInformationMessage('Dynalist-Style Moves supports one selection at a time.');
         return;
     }
 

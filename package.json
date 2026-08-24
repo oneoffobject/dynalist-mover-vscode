@@ -1,8 +1,8 @@
 {
   "name": "dynalist-mover-vscode",
-  "displayName": "Dynalist Mover",
-  "description": "Move the current line (or selection) together with its indented child items up or down, bringing a Dynalist-like outliner editing experience to VS Code.",
-  "version": "1.1.0",
+  "displayName": "Dynalist-Style Moves",
+  "description": "Renamed from Dynalist Mover. Move the current line or selection with its indented children up or down using Dynalist-style behavior.",
+  "version": "1.1.1",
   "publisher": "OneOffObject",
   "license": "MIT",
   "icon": "icon.png",
@@ -31,11 +31,11 @@
     "commands": [
       {
         "command": "dynalistMover.moveLinesUp",
-        "title": "Dynalist Mover: Move selected lines up"
+        "title": "Dynalist-Style Moves: Move selected lines up"
       },
       {
         "command": "dynalistMover.moveLinesDown",
-        "title": "Dynalist Mover: Move selected lines down"
+        "title": "Dynalist-Style Moves: Move selected lines down"
       }
     ],
     "keybindings": [
@@ -53,7 +53,7 @@
       }
     ],
     "configuration": {
-      "title": "Dynalist Mover",
+      "title": "Dynalist-Style Moves",
       "properties": {
         "dynalistMover.moveChildrenWithParent": {
           "type": "boolean",
